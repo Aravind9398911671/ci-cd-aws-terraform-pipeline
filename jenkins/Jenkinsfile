@@ -1,0 +1,28 @@
+pipeline {
+    agent any
+    tools {
+        maven 'mvn'
+    }
+    stages {
+        stage('Clone') {
+            steps {
+                git 'https://github.com/Aravind9398911671/ci-cd-aws-terraform-pipeline.git'
+            }
+        }
+        stage('Build') {
+            steps {
+                sh 'mvn clean package'
+            }
+        }
+        stage('Docker Build') {
+            steps {
+                sh 'docker build -t aravind/demoapp:latest .'
+            }
+        }
+        stage('Deploy') {
+            steps {
+                sh 'docker run -d -p 8080:8080 aravind/demoapp:latest'
+            }
+        }
+    }
+}
